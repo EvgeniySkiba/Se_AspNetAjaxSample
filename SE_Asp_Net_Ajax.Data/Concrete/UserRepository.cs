@@ -121,6 +121,11 @@ namespace SE_Asp_Net_Ajax.Data.Concrete
             await context.SaveChangesAsync();
         }
 
+        public async Task CreateAsync(User user)
+        {
+            context.Users.Add(user);
+            await context.SaveChangesAsync();
+        }
         public async Task<User> GetUserById(int id)
         {
             return await context.Users.FindAsync(id);

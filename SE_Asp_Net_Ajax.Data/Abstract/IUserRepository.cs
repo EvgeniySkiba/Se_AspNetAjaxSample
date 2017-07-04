@@ -20,6 +20,7 @@ namespace SE_Asp_Net_Ajax.Data.Abstract
         Task DeleteUserAsync(int id);
         Task<User> GetUserByIdAsynk(Guid id);
         Task<List<User>> GetUsersAsync();
+        Task CreateAsync(User user);
         Task<List<User>> GetUsersAsync(int pageIndex, int pageSize);
         Task SaveAsync();
         Task<User> GetUserById(int id);

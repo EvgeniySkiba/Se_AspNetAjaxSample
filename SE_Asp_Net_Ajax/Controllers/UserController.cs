@@ -18,40 +18,57 @@ namespace SE_Asp_Net_Ajax.Controllers
 {
     public class UserController : Controller
     {
-        private IUserRepository noterepository;
+        private IUserRepository usersRepository;
 
         private List<User> usersList;
 
         public UserController()
         {
             usersList = UserUtils.usersList;
-            noterepository = new UserRepository(new UserContext());
+            usersRepository = new UserRepository(new UserContext());
         }
 
-        [HttpPost]
+
+        /// <summary>
+        /// сихронный вариант get - запроса 
+        /// проверка в httprequester
+        /// </summary>
+        /// <returns></returns>
         public JsonResult list()
         {
-            var res = noterepository.GetUsers();
+            var res = usersRepository.GetUsers();
             string users = JsonConvert.SerializeObject(res);
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
 
-        public async Task<ActionResult> listAsynk()
+        /// <summary>
+        /// асинхронный вариант в репозитории
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ActionResult> listAllAsynk()
         {
-            var usersList = noterepository.GetUsers();
+
+            //TODO: добавить проверку на ошибки 
+            System.Diagnostics.Debug.WriteLine("listAllAsynk");
+
+            var usersList = await usersRepository.GetUsersAsync();
 
             string users = JsonConvert.SerializeObject(usersList);
             return Json(users, JsonRequestBehavior.AllowGet);
         }
-        
 
+
+        /// <summary>
+        /// асинхронный вариант в контроллере
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
-        public async Task<ActionResult> listAllAsynk()
+        public async Task<ActionResult> listAllAsynkController()
         {
             System.Diagnostics.Debug.WriteLine("UserController");
 
-            var task = Task.Run(() => noterepository.GetUsersAsync());
+            var task = Task.Run(() => usersRepository.GetUsers());
             var result = await task;
 
             string users = JsonConvert.SerializeObject(result);
@@ -60,13 +77,34 @@ namespace SE_Asp_Net_Ajax.Controllers
 
 
         [HttpPost]
-        public JsonResult list(int page, int itemsPerPage)
+        public JsonResult paggedlist(int page, int itemsPerPage)
         {
+            // TOdO : implement <T>
+
+            List<User> users = usersList.Skip(itemsPerPage * (page - 1)).Take(itemsPerPage)
+                 .ToList();
+
+
+            //var users = usersRepository.GetUsers();
+            int totalCount = usersRepository.Count();
+            UserViewModel userModel = new UserViewModel() { CurrentPage = page, users = users, TotalCount = totalCount };
+
+            string jsonString = JsonConvert.SerializeObject(userModel, Formatting.None,
+                new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented });
+
+            return Json(jsonString, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public JsonResult pagedListAsynk(int page, int itemsPerPage)
+        {
+
+            //TODO: implement
 
             List<User> users = usersList.Skip(itemsPerPage * (page - 1)).Take(itemsPerPage)
                 .ToList();
 
-            int totalCount = users.Count();//return the number of pages
+            int totalCount = users.Count();
             UserViewModel userModel = new UserViewModel() { CurrentPage = page, users = users, TotalCount = totalCount };
 
             string jsonString = JsonConvert.SerializeObject(userModel, Formatting.None,
@@ -80,6 +118,42 @@ namespace SE_Asp_Net_Ajax.Controllers
         {
             UserUtils.AddUser(id, email, gender, name, midleName, lastName, firstName);
             return Json("User Details was created");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> CreateAsynk([Bind(Include = "id,  email,  gender,  name")] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                Data.Entities.User item = new Data.Entities.User() { Name = user.Name, Email = user.Email };
+
+                await usersRepository.CreateAsync(item);
+                await usersRepository.SaveAsync();
+                return Json("User Details was created");
+            }
+
+            return Json("Error");
+        }
+
+        public async Task<ActionResult> CountAsynk()
+        {   
+            string users = JsonConvert.SerializeObject(await  usersRepository.CountAsynk());
+            return Json(users, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// асинхронный вариант для удаления 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost, ActionName("Delete")]
+        public async Task<ActionResult> DeleteConfirmedAsynk(int id)
+        {
+            await usersRepository.DeleteUserAsync(id);
+            await usersRepository.SaveAsync();
+            return Json("Success");
         }
 
 
@@ -151,6 +225,12 @@ namespace SE_Asp_Net_Ajax.Controllers
                 JsonRequestBehavior = behavior,
                 MaxJsonLength = Int32.MaxValue
             };
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            usersRepository.Dispose();
+            base.Dispose(disposing);
         }
     }
 }
