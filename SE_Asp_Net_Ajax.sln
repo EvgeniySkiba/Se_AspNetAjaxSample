@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SE_Asp_Net_Ajax", "SE_Asp_N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SE_Asp_Net_Ajax.Tests", "SE_Asp_Net_Ajax.Tests\SE_Asp_Net_Ajax.Tests.csproj", "{C865621E-78BD-4017-AD4F-D430ED38168F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SE_Asp_Net_Ajax.Data", "SE_Asp_Net_Ajax.Data\SE_Asp_Net_Ajax.Data.csproj", "{217B1234-C042-4060-A876-14836F4DF770}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{C865621E-78BD-4017-AD4F-D430ED38168F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C865621E-78BD-4017-AD4F-D430ED38168F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C865621E-78BD-4017-AD4F-D430ED38168F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{217B1234-C042-4060-A876-14836F4DF770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{217B1234-C042-4060-A876-14836F4DF770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{217B1234-C042-4060-A876-14836F4DF770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{217B1234-C042-4060-A876-14836F4DF770}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

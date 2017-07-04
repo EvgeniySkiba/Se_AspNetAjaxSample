@@ -7,6 +7,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
+using SE_Asp_Net_Ajax.Data;
+using SE_Asp_Net_Ajax.Data.Abstract;
+using SE_Asp_Net_Ajax.Data.Concrete;
 using SE_Asp_Net_Ajax.Models;
 using SE_Asp_Net_Ajax.Utils;
 using SE_Asp_Net_Ajax.ViewModel;
@@ -15,27 +18,40 @@ namespace SE_Asp_Net_Ajax.Controllers
 {
     public class UserController : Controller
     {
+        private IUserRepository noterepository;
+
         private List<User> usersList;
 
         public UserController()
         {
             usersList = UserUtils.usersList;
+            noterepository = new UserRepository(new UserContext());
         }
 
-
+        [HttpPost]
         public JsonResult list()
         {
-            string users = JsonConvert.SerializeObject(usersList);
+            var res = noterepository.GetUsers();
+            string users = JsonConvert.SerializeObject(res);
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
 
-        [HttpPost]
         public async Task<ActionResult> listAsynk()
+        {
+            var usersList = noterepository.GetUsers();
+
+            string users = JsonConvert.SerializeObject(usersList);
+            return Json(users, JsonRequestBehavior.AllowGet);
+        }
+        
+
+        [HttpPost]
+        public async Task<ActionResult> listAllAsynk()
         {
             System.Diagnostics.Debug.WriteLine("UserController");
 
-            var task = Task.Run(() => usersList.ToList());
+            var task = Task.Run(() => noterepository.GetUsersAsync());
             var result = await task;
 
             string users = JsonConvert.SerializeObject(result);
