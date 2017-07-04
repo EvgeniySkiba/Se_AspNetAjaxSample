@@ -1,0 +1,8 @@
+﻿
+
+http://localhost:3166/User/UpdateUsersDetail
+-- input param as a string
+
+{  
+   "usersJson":"{\"Id\": 100,\"Name\": \"entityName\",\"email\":\"email\",\"lastName \" : \" last name \"}"
+}
