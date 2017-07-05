@@ -62,7 +62,7 @@ namespace SE_Asp_Net_Ajax.Controllers
                 FirstName = "Andrey",
                 MiddleName = "Alexandrovich",
                 LastName = "Chernikov",
-                Gender = UserViewModel.GenderEnum.Male
+                Gender = GenderEnum.Male
             };
 
             var jsonUser = JsonConvert.SerializeObject(user);

@@ -10,14 +10,9 @@ namespace SE_Asp_Net_Ajax.ViewModel
 {
     public class UserViewModel
     {
-
         [JsonConverter(typeof(GenderEnumConverter))]
-        public enum GenderEnum
-        {
-            Male,
-            Female
-        }
-
+        public GenderEnum gender;
+        
         [JsonProperty("id")]
         public int Id { get; set; }
 
