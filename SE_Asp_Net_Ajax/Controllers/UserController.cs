@@ -41,6 +41,37 @@ namespace SE_Asp_Net_Ajax.Controllers
             return Json(users, JsonRequestBehavior.AllowGet);
         }
 
+        public JsonResult listEnums()
+        {
+            /*  var res = usersRepository.GetUsers();
+              var userResult = from i in res
+                  select new UserViewModel
+                  {
+                      Id = i.Id,
+                      Name = i.Name,
+                      Gender = i.Gender.ToString();
+
+                  };*/
+
+            var user = new UserViewModel()
+            {
+                Id = 404,
+                Email = "chernikov@gmail.com",
+                UserName = "rollinx",
+                Name = "Andrey",
+                FirstName = "Andrey",
+                MiddleName = "Alexandrovich",
+                LastName = "Chernikov",
+                Gender = UserViewModel.GenderEnum.Male
+            };
+
+            var jsonUser = JsonConvert.SerializeObject(user);
+
+            return Json(jsonUser, JsonRequestBehavior.AllowGet);
+        }
+
+
+
 
         /// <summary>
         /// асинхронный вариант в репозитории
@@ -87,9 +118,9 @@ namespace SE_Asp_Net_Ajax.Controllers
 
             //var users = usersRepository.GetUsers();
             int totalCount = usersRepository.Count();
-            UserViewModel userModel = new UserViewModel() { CurrentPage = page, users = users, TotalCount = totalCount };
+            UserListViewModel userListModel = new UserListViewModel() { CurrentPage = page, users = users, TotalCount = totalCount };
 
-            string jsonString = JsonConvert.SerializeObject(userModel, Formatting.None,
+            string jsonString = JsonConvert.SerializeObject(userListModel, Formatting.None,
                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented });
 
             return Json(jsonString, JsonRequestBehavior.AllowGet);
@@ -105,9 +136,9 @@ namespace SE_Asp_Net_Ajax.Controllers
                 .ToList();
 
             int totalCount = users.Count();
-            UserViewModel userModel = new UserViewModel() { CurrentPage = page, users = users, TotalCount = totalCount };
+            UserListViewModel userListModel = new UserListViewModel() { CurrentPage = page, users = users, TotalCount = totalCount };
 
-            string jsonString = JsonConvert.SerializeObject(userModel, Formatting.None,
+            string jsonString = JsonConvert.SerializeObject(userListModel, Formatting.None,
                 new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented });
 
             return Json(jsonString, JsonRequestBehavior.AllowGet);
